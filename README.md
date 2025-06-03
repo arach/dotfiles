@@ -2,23 +2,19 @@
 
 Welcome to my dotfiles repository! This is where I keep all my system configuration files, ensuring a consistent and personalized development environment across all my machines.
 
-## 🖼️ Preview
-
-![My Desktop](homescreen.jpg)
 
 ## 📁 Included Configurations
 
 - **Shell**: `.zshrc` (Zsh configuration with Oh My Zsh and Powerlevel10k)
 - **Terminal**: iTerm2 configuration and color schemes
 - **Editor**: `.vimrc` (Vim configuration)
-- **Window Management**: `.slate.js` (Window management configuration)
-- **Bash**: `.bashrc` (Bash configuration)
+- **Window Management**: Magnet
 
 ## 🚀 Installation
 
 1. Clone this repository to your home directory:
    ```bash
-   git clone https://github.com/yourusername/dotfiles.git ~/dotfiles
+   git clone https://github.com/arach/dotfiles.git ~/dotfiles
    ```
 
 2. Run the setup script (if available):
@@ -46,7 +42,16 @@ Welcome to my dotfiles repository! This is where I keep all my system configurat
 - [Oh My Zsh](https://ohmyz.sh/)
 - [Powerlevel10k](https://github.com/romkatv/powerlevel10k)
 - [iTerm2](https://iterm2.com/)
-- [Slate](https://github.com/jigish/slate) (window management)
+
+## 📚 Other Configurations
+- [Übersicht](https://github.com/felixhageloh/uebersicht) - helps me add custom widgets on homscreen
+- [macOS Widgets](https://support.apple.com/en-ca/guide/mac-help/mchl52be5da5/mac) - new in macOS 15
+- [Monochrome](monochrome.png)
+
+## Preview
+
+![My Desktop](homescreen.jpg)
+
 
 ## 🤝 Contributing
 
