@@ -67,6 +67,7 @@
     "Green Component" : 0.54509806632995605
   },
   "Blinking Cursor" : false,
+  "Space" : 0,
   "Selected Text Color (Light)" : {
     "Red Component" : 0.57647061347961426,
     "Color Space" : "sRGB",
@@ -171,7 +172,7 @@
     "Red Component" : 0.73333334922790527,
     "Blue Component" : 0
   },
-  "Window Type" : 0,
+  "Window Type" : 12,
   "BM Growl" : true,
   "Prompt Before Closing 2" : false,
   "Command" : "",
@@ -375,7 +376,7 @@
     "Alpha Component" : 1,
     "Green Component" : 0.63137257099151611
   },
-  "Screen" : -1,
+  "Screen" : -2,
   "Ansi 4 Color (Dark)" : {
     "Red Component" : 0.14901961386203766,
     "Color Space" : "sRGB",
