@@ -1,0 +1,12 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = Arach
+	email = arach@tchoupani.com
+[init]
+	defaultBranch = master
+[core]
+	excludesfile = /Users/arach/.gitignore_global
