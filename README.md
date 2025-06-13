@@ -9,6 +9,7 @@ Welcome to my dotfiles repository! This is where I keep all my system configurat
 - **Terminal**: iTerm2 configuration and color schemes
 - **Editor**: `.vimrc` (Vim configuration)
 - **Window Management**: Magnet
+- **Claude AI**: `dotclaude/` (Templates and configuration for Claude development assistant)
 
 ## 🚀 Installation
 
@@ -42,6 +43,35 @@ Welcome to my dotfiles repository! This is where I keep all my system configurat
 - [Oh My Zsh](https://ohmyz.sh/)
 - [Powerlevel10k](https://github.com/romkatv/powerlevel10k)
 - [iTerm2](https://iterm2.com/)
+
+## 🤖 Claude Development Assistant
+
+The `dotclaude/` directory contains templates and configuration for setting up Claude AI as your development assistant:
+
+- **`CLAUDE_TEMPLATE.md`**: Comprehensive template for project-specific Claude instructions including:
+  - Git commit style guidelines (using gitmoji)
+  - Code style preferences (TypeScript, React best practices)
+  - Development workflow and quality standards
+  - Architecture patterns and debugging commands
+
+- **`setup-project.sh`**: Quick setup script to initialize Claude in new projects
+  ```bash
+  cd ~/dotfiles/dotclaude
+  ./setup-project.sh /path/to/your/project
+  ```
+
+- **`preferences.md`**: Personal preferences for Claude's behavior
+- **`settings.json`**: Claude Code configuration (theme, permissions, etc.)
+- **`claude_project.json`**: Default project settings template
+
+### Quick Setup for New Projects
+
+To add Claude development guidelines to a new project:
+```bash
+~/dotfiles/dotclaude/setup-project.sh
+```
+
+This will create a `CLAUDE.md` file in your project with development guidelines and set up gitmoji commit templates.
 
 ## 📚 Other Configurations
 - [Übersicht](https://github.com/felixhageloh/uebersicht) - helps me add custom widgets on homscreen
