@@ -4,66 +4,6 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "DEBUG 7  — trip when ACK05 sends Hyper-C",
-                        "manipulators": [
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 514,
-                                                "vendor_id": 10429
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    },
-                                    {
-                                        "name": "active_macro_button",
-                                        "type": "variable_if",
-                                        "value": 0
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "c",
-                                    "modifiers": {
-                                        "mandatory": ["command", "option", "control", "shift"],
-                                        "optional": []
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "set_variable": {
-                                            "name": "debug7",
-                                            "value": 1
-                                        }
-                                    },
-                                    {
-                                        "set_variable": {
-                                            "name": "active_macro_button",
-                                            "value": 7
-                                        }
-                                    }
-                                ],
-                                "to_after_key_up": [
-                                    { "key_code": "escape" },
-                                    {
-                                        "set_variable": {
-                                            "name": "debug7",
-                                            "value": 0
-                                        }
-                                    },
-                                    {
-                                        "set_variable": {
-                                            "name": "active_macro_button",
-                                            "value": 0
-                                        }
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Logitech ERGO K860 → Caps Lock → Hyper Key",
                         "manipulators": [
                             {
@@ -100,6 +40,110 @@
                                         "key_code": "right_command",
                                         "modifiers": ["right_option", "right_control", "right_shift"]
                                     }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "ACK05 ⟲ 12 → 1 (scroll up)                      [Claude Accept]",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 514,
+                                                "vendor_id": 10429
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    },
+                                    {
+                                        "name": "active_macro_button",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "simultaneous": [
+                                        { "key_code": "left_control" },
+                                        { "key_code": "keypad_hyphen" }
+                                    ],
+                                    "simultaneous_options": {
+                                        "detect_key_down_uninterruptedly": true,
+                                        "key_down_order": "strict",
+                                        "key_up_order": "strict_inverse",
+                                        "to_after_key_up": [
+                                            {
+                                                "set_variable": {
+                                                    "name": "active_macro_button",
+                                                    "value": 0
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "set_variable": {
+                                            "name": "active_macro_button",
+                                            "value": 12
+                                        }
+                                    },
+                                    { "key_code": "1" }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "ACK05 ⟳ 11 → 2 (scroll down)                 [Claude Accept + Trust]",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 514,
+                                                "vendor_id": 10429
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    },
+                                    {
+                                        "name": "active_macro_button",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "simultaneous": [
+                                        { "key_code": "left_control" },
+                                        { "key_code": "keypad_plus" }
+                                    ],
+                                    "simultaneous_options": {
+                                        "detect_key_down_uninterruptedly": true,
+                                        "key_down_order": "strict",
+                                        "key_up_order": "strict_inverse",
+                                        "to_after_key_up": [
+                                            {
+                                                "set_variable": {
+                                                    "name": "active_macro_button",
+                                                    "value": 0
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "set_variable": {
+                                            "name": "active_macro_button",
+                                            "value": 11
+                                        }
+                                    },
+                                    { "key_code": "2" }
                                 ],
                                 "type": "basic"
                             }
@@ -311,7 +355,7 @@
                         ]
                     },
                     {
-                        "description": "ACK05 ◾ 7 → Escape (flag = 7 while key held)",
+                        "description": "ACK05 ◾ 7 → Escape",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -324,7 +368,11 @@
                                         ],
                                         "type": "device_if"
                                     },
-                                    { "type": "variable_if", "name": "active_macro_button", "value": 0 }
+                                    {
+                                        "name": "active_macro_button",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
                                 ],
                                 "description": "Button 7 → Escape",
                                 "from": {
@@ -360,8 +408,59 @@
                         ]
                     },
                     {
+                        "description": "ACK05 ◾ 10 → Enter",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 514,
+                                                "vendor_id": 10429
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    },
+                                    {
+                                        "name": "active_macro_button",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "simultaneous": [
+                                        { "key_code": "left_control" },
+                                        { "key_code": "s" }
+                                    ],
+                                    "simultaneous_options": {
+                                        "detect_key_down_uninterruptedly": true,
+                                        "key_down_order": "strict",
+                                        "key_up_order": "strict_inverse"
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "set_variable": {
+                                            "name": "active_macro_button",
+                                            "value": 10
+                                        }
+                                    },
+                                    { "key_code": "return_or_enter" }
+                                ],
+                                "to_after_key_up": [
+                                    {
+                                        "set_variable": {
+                                            "name": "active_macro_button",
+                                            "value": 0
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "ACK05 ◾ 5 → Hyper+C                         [Claude]",
-                        "enabled": true,
                         "manipulators": [
                             {
                                 "conditions": [
@@ -390,12 +489,6 @@
                                         }
                                     },
                                     {
-                                        "set_variable": {
-                                            "name": "saw_5",
-                                            "value": 0
-                                        }
-                                    },
-                                    {
                                         "key_code": "c",
                                         "modifiers": ["command", "option", "control", "shift"]
                                     }
@@ -408,31 +501,6 @@
                                         }
                                     }
                                 ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "ACK05 ◾ 7 – swallow stray o",
-                        "enabled": false,
-                        "manipulators": [
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 514,
-                                                "vendor_id": 10429
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "o",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [],
                                 "type": "basic"
                             }
                         ]
