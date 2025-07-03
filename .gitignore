@@ -1,1 +1,51 @@
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editor swap files
+*.swp
+*.swo
+*~
+.*.swp
+.*.swo
+
+# VS Code
+.vscode/
+
+# Local configuration
+.claude/
+*.local
+*.local.*
+.env
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+.tmp/
+tmp/
+
+# Node.js (for your Claude scripts)
+node_modules/
+npm-debug.log*
+
+# Shell history files (sensitive)
+.bash_history
+.zsh_history
+
+# Credentials (just in case)
+*.pem
+*.key
+.ssh/id_*
+
+# Backup files
+*.orig
+
+# Archive files
+*.zip
+*.tar.gz
