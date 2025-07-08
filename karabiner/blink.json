@@ -1,0 +1,140 @@
+{
+    "description": "Blink Deploy Chords (Hyper+D+1-9 → Ctrl+Opt+Shift+1–9)",
+    "manipulators": [
+      {
+        "type": "basic",
+        "from": {
+          "simultaneous": [{ "key_code": "d" }, { "key_code": "1" }],
+          "modifiers": {
+            "mandatory": ["command", "control", "option", "shift"]
+          },
+          "simultaneous_options": {
+            "key_down_order": "strict",
+            "key_up_order": "strict_inverse",
+            "detect_key_down_uninterruptedly": true
+          }
+        },
+        "to": [{ "key_code": "1", "modifiers": ["left_control", "left_option", "left_shift"] }]
+      },
+      {
+        "type": "basic",
+        "from": {
+          "simultaneous": [{ "key_code": "d" }, { "key_code": "2" }],
+          "modifiers": {
+            "mandatory": ["command", "control", "option", "shift"]
+          },
+          "simultaneous_options": {
+            "key_down_order": "strict",
+            "key_up_order": "strict_inverse",
+            "detect_key_down_uninterruptedly": true
+          }
+        },
+        "to": [{ "key_code": "2", "modifiers": ["left_control", "left_option", "left_shift"] }]
+      },
+      {
+        "type": "basic",
+        "from": {
+          "simultaneous": [{ "key_code": "d" }, { "key_code": "3" }],
+          "modifiers": {
+            "mandatory": ["command", "control", "option", "shift"]
+          },
+          "simultaneous_options": {
+            "key_down_order": "strict",
+            "key_up_order": "strict_inverse",
+            "detect_key_down_uninterruptedly": true
+          }
+        },
+        "to": [{ "key_code": "3", "modifiers": ["left_control", "left_option", "left_shift"] }]
+      },
+      {
+        "type": "basic",
+        "from": {
+          "simultaneous": [{ "key_code": "d" }, { "key_code": "4" }],
+          "modifiers": {
+            "mandatory": ["command", "control", "option", "shift"]
+          },
+          "simultaneous_options": {
+            "key_down_order": "strict",
+            "key_up_order": "strict_inverse",
+            "detect_key_down_uninterruptedly": true
+          }
+        },
+        "to": [{ "key_code": "4", "modifiers": ["left_control", "left_option", "left_shift"] }]
+      },
+      {
+        "type": "basic",
+        "from": {
+          "simultaneous": [{ "key_code": "d" }, { "key_code": "5" }],
+          "modifiers": {
+            "mandatory": ["command", "control", "option", "shift"]
+          },
+          "simultaneous_options": {
+            "key_down_order": "strict",
+            "key_up_order": "strict_inverse",
+            "detect_key_down_uninterruptedly": true
+          }
+        },
+        "to": [{ "key_code": "5", "modifiers": ["left_control", "left_option", "left_shift"] }]
+      },
+      {
+        "type": "basic",
+        "from": {
+          "simultaneous": [{ "key_code": "d" }, { "key_code": "6" }],
+          "modifiers": {
+            "mandatory": ["command", "control", "option", "shift"]
+          },
+          "simultaneous_options": {
+            "key_down_order": "strict",
+            "key_up_order": "strict_inverse",
+            "detect_key_down_uninterruptedly": true
+          }
+        },
+        "to": [{ "key_code": "6", "modifiers": ["left_control", "left_option", "left_shift"] }]
+      },
+      {
+        "type": "basic",
+        "from": {
+          "simultaneous": [{ "key_code": "d" }, { "key_code": "7" }],
+          "modifiers": {
+            "mandatory": ["command", "control", "option", "shift"]
+          },
+          "simultaneous_options": {
+            "key_down_order": "strict",
+            "key_up_order": "strict_inverse",
+            "detect_key_down_uninterruptedly": true
+          }
+        },
+        "to": [{ "key_code": "7", "modifiers": ["left_control", "left_option", "left_shift"] }]
+      },
+      {
+        "type": "basic",
+        "from": {
+          "simultaneous": [{ "key_code": "d" }, { "key_code": "8" }],
+          "modifiers": {
+            "mandatory": ["command", "control", "option", "shift"]
+          },
+          "simultaneous_options": {
+            "key_down_order": "strict",
+            "key_up_order": "strict_inverse",
+            "detect_key_down_uninterruptedly": true
+          }
+        },
+        "to": [{ "key_code": "8", "modifiers": ["left_control", "left_option", "left_shift"] }]
+      },
+      {
+        "type": "basic",
+        "from": {
+          "simultaneous": [{ "key_code": "d" }, { "key_code": "9" }],
+          "modifiers": {
+            "mandatory": ["command", "control", "option", "shift"]
+          },
+          "simultaneous_options": {
+            "key_down_order": "strict",
+            "key_up_order": "strict_inverse",
+            "detect_key_down_uninterruptedly": true
+          }
+        },
+        "to": [{ "key_code": "9", "modifiers": ["left_control", "left_option", "left_shift"] }]
+      }
+    ]
+  }
