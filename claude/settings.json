@@ -1,0 +1,42 @@
+{
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/arach/.hooked/node_modules/.bin/tsx /Users/arach/.hooked/src/notification.ts"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/arach/.hooked/node_modules/.bin/tsx /Users/arach/.hooked/src/stop-hook.ts"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/arach/.hooked/node_modules/.bin/tsx /Users/arach/.hooked/src/user-prompt-submit.ts"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bun /Users/arach/.claude/statusline/index.ts"
+  },
+  "enabledPlugins": {
+    "swift-lsp@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true
+}

@@ -15,10 +15,17 @@
 .vscode/
 
 # Local configuration
-.claude/
 *.local
 *.local.*
 .env
+.env.local
+
+# Secrets (never commit)
+secrets/
+credentials/
+*.pem
+*.key
+.ssh/id_*
 
 # Logs
 *.log
@@ -27,25 +34,24 @@
 *.tmp
 *.bak
 *.backup
+*.orig
 .tmp/
 tmp/
 
-# Node.js (for your Claude scripts)
+# Node.js
 node_modules/
 npm-debug.log*
 
-# Shell history files (sensitive)
+# Shell history (sensitive)
 .bash_history
 .zsh_history
-
-# Credentials (just in case)
-*.pem
-*.key
-.ssh/id_*
-
-# Backup files
-*.orig
 
 # Archive files
 *.zip
 *.tar.gz
+
+# Backup directories
+.dotfiles-backup/
+
+# Local machine specific
+settings.local.json

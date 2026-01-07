@@ -1,0 +1,6 @@
+- Always allow puppeteer uses - all features
+- Prefer pnpm over npm for Node.js projects
+- When working with Node.js projects, check for pnpm-lock.yaml first
+- Add gitmoji to commit messages
+- NEVER add co-authoring attribution or "Generated with Claude Code" footers to commits
+- don't co-author commits

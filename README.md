@@ -1,96 +1,112 @@
-# 🖥️ My Dotfiles
+# Dotfiles
 
-Welcome to my dotfiles repository! This is where I keep all my system configuration files, ensuring a consistent and personalized development environment across all my machines.
+Personal configuration files and setup CLI for macOS.
 
+## Quick Start
 
-## 📁 Included Configurations
-
-- **Shell**: `.zshrc` (Zsh configuration with Oh My Zsh and Powerlevel10k)
-- **Terminal**: iTerm2 configuration and color schemes
-- **Editor**: `.vimrc` (Vim configuration)
-- **Window Management**: Magnet
-- **Claude AI**: `dotclaude/` (Templates and configuration for Claude development assistant)
-
-## 🚀 Installation
-
-1. Clone this repository to your home directory:
-   ```bash
-   git clone https://github.com/arach/dotfiles.git ~/dotfiles
-   ```
-
-2. Run the setup script (if available):
-   ```bash
-   cd ~/dotfiles
-   ./install.sh
-   ```
-
-3. Or manually create symlinks to the configuration files:
-   ```bash
-   ln -s ~/dotfiles/.zshrc ~/.zshrc
-   ln -s ~/dotfiles/.vimrc ~/.vimrc
-   # Add other config files as needed
-   ```
-
-## ✨ Features
-
-- **Zsh with Powerlevel10k**: A fast and customizable Zsh prompt
-- **iTerm2 Integration**: Custom color schemes and profiles
-- **Vim Configuration**: Optimized for development with plugins and keybindings
-- **Window Management**: Custom window layouts with Slate
-
-## 🛠️ Dependencies
-
-- [Oh My Zsh](https://ohmyz.sh/)
-- [Powerlevel10k](https://github.com/romkatv/powerlevel10k)
-- [iTerm2](https://iterm2.com/)
-
-## 🤖 Claude Development Assistant
-
-The `dotclaude/` directory contains templates and configuration for setting up Claude AI as your development assistant:
-
-- **`CLAUDE_TEMPLATE.md`**: Comprehensive template for project-specific Claude instructions including:
-  - Git commit style guidelines (using gitmoji)
-  - Code style preferences (TypeScript, React best practices)
-  - Development workflow and quality standards
-  - Architecture patterns and debugging commands
-
-- **`setup-project.sh`**: Quick setup script to initialize Claude in new projects
-  ```bash
-  cd ~/dotfiles/dotclaude
-  ./setup-project.sh /path/to/your/project
-  ```
-
-- **`preferences.md`**: Personal preferences for Claude's behavior
-- **`settings.json`**: Claude Code configuration (theme, permissions, etc.)
-- **`claude_project.json`**: Default project settings template
-
-### Quick Setup for New Projects
-
-To add Claude development guidelines to a new project:
 ```bash
-~/dotfiles/dotclaude/setup-project.sh
+git clone git@github.com:arach/dotfiles.git ~/dotfiles
+cd ~/dotfiles/cli
+bun install
+bun run src/index.ts install
 ```
 
-This will create a `CLAUDE.md` file in your project with development guidelines and set up gitmoji commit templates.
+## CLI
 
-## 📚 Other Configurations
-- [Übersicht](https://github.com/felixhageloh/uebersicht) - helps me add custom widgets on homscreen
-- [macOS Widgets](https://support.apple.com/en-ca/guide/mac-help/mchl52be5da5/mac) - new in macOS 15
-- [Monochrome](monochrome.png)
+```bash
+# Check what's installed
+bun run src/index.ts status
 
-## Preview
+# Install everything
+bun run src/index.ts install
 
-![My Desktop](homescreen.jpg)
+# Install specific components
+bun run src/index.ts install zsh
+bun run src/index.ts install claude
+```
 
+### Global Install (optional)
 
-## 🤝 Contributing
+```bash
+cd ~/dotfiles/cli
+bun link
+dotfiles status   # now available globally
+```
 
-Feel free to fork this repository and customize it for your own use. If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
+## What's Included
 
-## 📄 License
+### ZSH (`zsh/`)
+- `.zshrc` - Shell config with aliases for git, docker, npm, etc.
+- `.p10k.zsh` - Powerlevel10k theme (nerdfont, classic style)
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+The installer will set up:
+- Oh My Zsh
+- Powerlevel10k theme
+- Symlinks to these configs
 
----
+### Claude Code (`claude/`)
+- `CLAUDE.md` - Personal preferences (gitmoji, pnpm, no co-authoring)
+- `statusline/` - Custom statusline showing model, context %, git branch
+- `commands/` - Slash commands: `/commit`, `/ship`, `/push`, etc.
 
-*Last updated: June 2025*
+The installer will configure:
+- Statusline in settings.json
+- Always thinking mode
+- Swift LSP plugin
+
+### iTerm2 (`iterm2/`)
+- Custom color schemes and profiles
+- AI assistant configuration
+
+### Other Configs
+- **Vim** - `.vimrc`
+- **Karabiner** - `karabiner/`
+- **dotclaude** - Templates for new projects (`dotclaude/setup-project.sh`)
+
+## Status Check
+
+```
+$ dotfiles status
+
+Dotfiles Status
+
+  ✓ Bun                     (1.2.19)
+  ✓ Oh My Zsh
+  ✓ Powerlevel10k
+  ✓ .zshrc                  (symlinked)
+  ✓ Claude CLI
+  ✓ Claude statusline
+  ✓ Statusline configured
+  ✓ Hooked CLI
+  ✓ Always thinking
+  ✓ Swift LSP plugin
+
+All configured!
+```
+
+## Dependencies
+
+- **Bun** - `brew install bun`
+- **Nerd Font** - Required for Powerlevel10k icons
+  ```bash
+  brew tap homebrew/cask-fonts
+  brew install font-meslo-lg-nerd-font
+  ```
+- [Oh My Zsh](https://ohmyz.sh/) - Installed automatically by CLI
+- [Powerlevel10k](https://github.com/romkatv/powerlevel10k) - Installed automatically by CLI
+- [iTerm2](https://iterm2.com/)
+
+## Secrets
+
+The `.zshrc` sources `~/.env.local` for API keys and tokens. This file is never committed.
+
+Create it manually:
+```bash
+# ~/.env.local
+export GITHUB_TOKEN="your_token"
+export OBSIDIAN_API_KEY="your_key"
+```
+
+## License
+
+MIT
