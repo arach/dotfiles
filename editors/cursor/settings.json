@@ -1,0 +1,18 @@
+{
+    "python.defaultInterpreterPath": "/opt/homebrew/opt/python@3.10/bin/python3",
+    "editor.inlineSuggest.enabled": true,
+    "terminal.integrated.sendKeybindingsToShell": true,
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
+    },
+    "window.commandCenter": true,
+    "git.autofetch": true,
+    "editor.accessibilitySupport": "on",
+    "git.enableSmartCommit": true,
+    "git.openRepositoryInParentFolders": "never",
+    "amp.url": "https://ampcode.com/",
+    "workbench.colorTheme": "Mermaid Dark"
+}
