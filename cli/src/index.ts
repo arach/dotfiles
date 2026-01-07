@@ -560,6 +560,84 @@ async function runInstall(components?: string[]) {
 }
 
 // ============================================================================
+// Claude-Assisted Setup
+// ============================================================================
+
+function generateClaudePrompt(): string {
+  const checks = checkInventory();
+  const missing = checks.filter(c => !c.installed);
+
+  if (missing.length === 0) {
+    return '';
+  }
+
+  const lines: string[] = [
+    `# Dotfiles Setup Request`,
+    ``,
+    `Please help me set up my dotfiles on this new machine. Here's what's missing:`,
+    ``,
+  ];
+
+  // Group by category
+  const byCategory = new Map<string, CheckResult[]>();
+  for (const item of missing) {
+    const existing = byCategory.get(item.category) || [];
+    existing.push(item);
+    byCategory.set(item.category, existing);
+  }
+
+  const categoryLabels: Record<string, string> = {
+    prerequisites: 'Prerequisites',
+    shell: 'Shell Setup',
+    claude: 'Claude Code',
+    extras: 'Extras',
+  };
+
+  for (const [category, items] of byCategory) {
+    lines.push(`## ${categoryLabels[category] || category}`);
+    for (const item of items) {
+      lines.push(`- [ ] ${item.name}${item.details ? ` (${item.details})` : ''}`);
+    }
+    lines.push('');
+  }
+
+  lines.push(`## Context`);
+  lines.push(`- Dotfiles repo is at: ~/dotfiles`);
+  lines.push(`- Home directory: ${HOME}`);
+  lines.push(`- The dotfiles include configs for: zsh, powerlevel10k, Claude Code statusline, slash commands`);
+  lines.push(``);
+  lines.push(`## Instructions`);
+  lines.push(`1. Install any missing prerequisites (brew, bun, nerd font)`);
+  lines.push(`2. For shell setup: install Oh My Zsh, then Powerlevel10k, then symlink the configs from ~/dotfiles/zsh/`);
+  lines.push(`3. For Claude: symlink configs from ~/dotfiles/claude/, update ~/.claude/settings.json to enable statusline and plugins`);
+  lines.push(`4. Create ~/.env.local for secrets if it doesn't exist`);
+  lines.push(``);
+  lines.push(`Please proceed step by step, showing me what you're doing.`);
+
+  return lines.join('\n');
+}
+
+function printClaudePrompt() {
+  const checks = checkInventory();
+  const missing = checks.filter(c => !c.installed);
+
+  if (missing.length === 0) {
+    console.log(`\n${c.green}Everything is already installed!${c.reset}\n`);
+    console.log(`No Claude prompt needed - your dotfiles are fully configured.`);
+    return;
+  }
+
+  console.log(`\n${c.bold}Claude Setup Prompt${c.reset}`);
+  console.log(`${c.dim}Copy this prompt and paste it to Claude to set up your dotfiles:${c.reset}\n`);
+  console.log(`${c.dim}${'─'.repeat(60)}${c.reset}`);
+  console.log(generateClaudePrompt());
+  console.log(`${c.dim}${'─'.repeat(60)}${c.reset}\n`);
+
+  console.log(`${c.cyan}Tip:${c.reset} You can pipe this directly to your clipboard:`);
+  console.log(`  ${c.dim}dotfiles prompt | pbcopy${c.reset}\n`);
+}
+
+// ============================================================================
 // CLI
 // ============================================================================
 
@@ -573,6 +651,7 @@ ${c.bold}Usage:${c.reset}
 ${c.bold}Commands:${c.reset}
   status              Show what's installed and configured
   install [component] Install everything or specific component
+  prompt              Generate a prompt for Claude to set things up
 
 ${c.bold}Components:${c.reset}
   zsh                 Oh My Zsh + Powerlevel10k + configs
@@ -581,10 +660,11 @@ ${c.bold}Components:${c.reset}
   all                 Everything (default)
 
 ${c.bold}Examples:${c.reset}
-  dotfiles status          Check current setup
-  dotfiles install         Install everything
-  dotfiles install zsh     Just ZSH stuff
-  dotfiles install claude  Just Claude stuff
+  dotfiles                     Check current setup
+  dotfiles install             Install everything
+  dotfiles install zsh         Just ZSH stuff
+  dotfiles prompt              Get a Claude-ready prompt
+  dotfiles prompt | pbcopy     Copy prompt to clipboard
 `);
 }
 
@@ -601,6 +681,11 @@ async function main() {
     case 'install':
     case 'i':
       await runInstall(args.slice(1));
+      break;
+
+    case 'prompt':
+    case 'p':
+      printClaudePrompt();
       break;
 
     case 'help':
