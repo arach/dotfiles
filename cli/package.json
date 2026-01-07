@@ -1,0 +1,15 @@
+{
+  "name": "dotfiles",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "dotfiles": "./src/index.ts"
+  },
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "install-global": "bun link"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
