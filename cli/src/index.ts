@@ -133,100 +133,262 @@ interface CheckResult {
   name: string;
   installed: boolean;
   details?: string;
+  category: 'prerequisites' | 'shell' | 'claude' | 'extras';
+  installHint?: string;
 }
 
-function checkStatus(): CheckResult[] {
-  const checks: CheckResult[] = [];
+function getVersion(cmd: string): string | undefined {
+  try {
+    return execSync(`${cmd} --version 2>/dev/null`, { encoding: 'utf-8' }).trim().split('\n')[0];
+  } catch {
+    return undefined;
+  }
+}
 
-  // Bun
+function checkInventory(): CheckResult[] {
+  const checks: CheckResult[] = [];
+  const claudeSettings = readJson(join(HOME, '.claude/settings.json'));
+
+  // ========== Prerequisites ==========
+  checks.push({
+    name: 'Homebrew',
+    category: 'prerequisites',
+    installed: commandExists('brew'),
+    details: commandExists('brew') ? 'installed' : undefined,
+    installHint: '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
+  });
+
+  checks.push({
+    name: 'Git',
+    category: 'prerequisites',
+    installed: commandExists('git'),
+    details: getVersion('git')?.replace('git version ', ''),
+  });
+
   checks.push({
     name: 'Bun',
+    category: 'prerequisites',
     installed: commandExists('bun'),
-    details: commandExists('bun') ? execSync('bun --version', { encoding: 'utf-8' }).trim() : undefined,
+    details: getVersion('bun'),
+    installHint: 'brew install bun',
   });
 
-  // Oh My Zsh
+  checks.push({
+    name: 'Nerd Font',
+    category: 'prerequisites',
+    installed: existsSync('/Library/Fonts/MesloLGSNerdFont-Regular.ttf') ||
+               existsSync(join(HOME, 'Library/Fonts/MesloLGSNerdFont-Regular.ttf')) ||
+               existsSync(join(HOME, 'Library/Fonts/MesloLGS NF Regular.ttf')),
+    details: 'for Powerlevel10k icons',
+    installHint: 'brew install font-meslo-lg-nerd-font',
+  });
+
+  // ========== Shell ==========
   checks.push({
     name: 'Oh My Zsh',
+    category: 'shell',
     installed: existsSync(join(HOME, '.oh-my-zsh')),
+    installHint: 'dotfiles install zsh',
   });
 
-  // Powerlevel10k
   const p10kPath = join(HOME, '.oh-my-zsh/custom/themes/powerlevel10k');
   checks.push({
     name: 'Powerlevel10k',
+    category: 'shell',
     installed: existsSync(p10kPath),
+    installHint: 'dotfiles install zsh',
   });
 
-  // .zshrc linked
   const zshrcPath = join(HOME, '.zshrc');
-  const zshrcLinked = existsSync(zshrcPath) &&
-    (isSymlink(zshrcPath) || readFileSync(zshrcPath, 'utf-8').includes('powerlevel10k'));
+  const zshrcExists = existsSync(zshrcPath);
+  const zshrcIsSymlink = zshrcExists && isSymlink(zshrcPath);
+  const zshrcHasP10k = zshrcExists && !zshrcIsSymlink &&
+    readFileSync(zshrcPath, 'utf-8').includes('powerlevel10k');
   checks.push({
     name: '.zshrc',
-    installed: zshrcLinked,
-    details: isSymlink(zshrcPath) ? 'symlinked' : 'configured',
+    category: 'shell',
+    installed: zshrcIsSymlink || zshrcHasP10k,
+    details: zshrcIsSymlink ? 'symlinked' : zshrcHasP10k ? 'configured' : zshrcExists ? 'exists (not linked)' : undefined,
+    installHint: 'dotfiles install zsh',
   });
 
-  // Claude CLI
+  const p10kZshPath = join(HOME, '.p10k.zsh');
+  checks.push({
+    name: '.p10k.zsh',
+    category: 'shell',
+    installed: existsSync(p10kZshPath),
+    details: isSymlink(p10kZshPath) ? 'symlinked' : existsSync(p10kZshPath) ? 'configured' : undefined,
+    installHint: 'dotfiles install zsh',
+  });
+
+  const envLocalPath = join(HOME, '.env.local');
+  checks.push({
+    name: '.env.local',
+    category: 'shell',
+    installed: existsSync(envLocalPath),
+    details: 'secrets file',
+    installHint: 'Create manually with GITHUB_TOKEN, OBSIDIAN_API_KEY',
+  });
+
+  // ========== Claude ==========
   checks.push({
     name: 'Claude CLI',
+    category: 'claude',
     installed: existsSync(join(HOME, '.claude/local/claude')) || commandExists('claude'),
+    installHint: 'npm install -g @anthropic-ai/claude-code',
   });
 
-  // Claude statusline
   checks.push({
-    name: 'Claude statusline',
-    installed: existsSync(join(HOME, '.claude/statusline/index.ts')),
+    name: 'CLAUDE.md',
+    category: 'claude',
+    installed: existsSync(join(HOME, '.claude/CLAUDE.md')),
+    details: isSymlink(join(HOME, '.claude/CLAUDE.md')) ? 'symlinked' : undefined,
+    installHint: 'dotfiles install claude',
   });
 
-  // Claude settings has statusline configured
-  const claudeSettings = readJson(join(HOME, '.claude/settings.json'));
+  checks.push({
+    name: 'Statusline script',
+    category: 'claude',
+    installed: existsSync(join(HOME, '.claude/statusline/index.ts')),
+    installHint: 'dotfiles install claude',
+  });
+
   checks.push({
     name: 'Statusline configured',
+    category: 'claude',
     installed: !!(claudeSettings as any)?.statusLine?.command,
+    details: (claudeSettings as any)?.statusLine ? 'in settings.json' : undefined,
+    installHint: 'dotfiles install claude',
   });
 
-  // Hooked
-  checks.push({
-    name: 'Hooked CLI',
-    installed: existsSync(join(HOME, '.hooked')),
-  });
-
-  // Always thinking
   checks.push({
     name: 'Always thinking',
+    category: 'claude',
     installed: (claudeSettings as any)?.alwaysThinkingEnabled === true,
+    installHint: 'dotfiles install claude',
   });
 
-  // Swift LSP
   checks.push({
     name: 'Swift LSP plugin',
+    category: 'claude',
     installed: !!(claudeSettings as any)?.enabledPlugins?.['swift-lsp@claude-plugins-official'],
+    installHint: 'dotfiles install claude',
+  });
+
+  // Count commands
+  const commandsDir = join(HOME, '.claude/commands');
+  let commandCount = 0;
+  if (existsSync(commandsDir)) {
+    try {
+      commandCount = execSync(`ls "${commandsDir}"/*.md 2>/dev/null | wc -l`, { encoding: 'utf-8' }).trim();
+    } catch {}
+  }
+  checks.push({
+    name: 'Slash commands',
+    category: 'claude',
+    installed: parseInt(commandCount as any) > 0,
+    details: parseInt(commandCount as any) > 0 ? `${commandCount} installed` : undefined,
+    installHint: 'dotfiles install claude',
+  });
+
+  // ========== Extras ==========
+  checks.push({
+    name: 'Hooked CLI',
+    category: 'extras',
+    installed: existsSync(join(HOME, '.hooked')),
+    details: 'Claude notifications',
+    installHint: 'dotfiles install hooked',
+  });
+
+  checks.push({
+    name: 'iTerm2',
+    category: 'extras',
+    installed: existsSync('/Applications/iTerm.app'),
+    installHint: 'brew install --cask iterm2',
   });
 
   return checks;
 }
 
-function printStatus() {
-  console.log(`\n${c.bold}Dotfiles Status${c.reset}\n`);
+function printInventory() {
+  console.log(`\n${c.bold}Dotfiles Inventory${c.reset}`);
+  console.log(`${c.dim}Checking what's installed on this machine...${c.reset}\n`);
 
-  const checks = checkStatus();
-  const maxLen = Math.max(...checks.map(c => c.name.length));
+  const checks = checkInventory();
 
-  for (const check of checks) {
-    const icon = check.installed ? `${c.green}✓${c.reset}` : `${c.dim}○${c.reset}`;
-    const name = check.name.padEnd(maxLen + 2);
-    const details = check.details ? `${c.dim}(${check.details})${c.reset}` : '';
-    console.log(`  ${icon} ${name} ${details}`);
+  const categories = [
+    { key: 'prerequisites', label: 'Prerequisites', required: true },
+    { key: 'shell', label: 'Shell (ZSH + Powerlevel10k)' },
+    { key: 'claude', label: 'Claude Code' },
+    { key: 'extras', label: 'Extras' },
+  ];
+
+  let totalInstalled = 0;
+  let totalMissing = 0;
+  const missingItems: CheckResult[] = [];
+
+  for (const cat of categories) {
+    const items = checks.filter(c => c.category === cat.key);
+    const installed = items.filter(c => c.installed);
+    const missing = items.filter(c => !c.installed);
+
+    totalInstalled += installed.length;
+    totalMissing += missing.length;
+    missingItems.push(...missing);
+
+    const status = missing.length === 0
+      ? `${c.green}✓ all set${c.reset}`
+      : `${c.yellow}${missing.length} missing${c.reset}`;
+
+    console.log(`${c.bold}${cat.label}${c.reset} ${c.dim}(${installed.length}/${items.length})${c.reset} ${status}`);
+
+    const maxLen = Math.max(...items.map(i => i.name.length));
+    for (const item of items) {
+      const icon = item.installed
+        ? `${c.green}✓${c.reset}`
+        : `${c.red}✗${c.reset}`;
+      const name = item.name.padEnd(maxLen + 2);
+      const details = item.details ? `${c.dim}${item.details}${c.reset}` : '';
+      console.log(`  ${icon} ${name} ${details}`);
+    }
+    console.log();
   }
 
-  const missing = checks.filter(c => !c.installed);
-  if (missing.length > 0) {
-    console.log(`\n${c.yellow}Run 'dotfiles install' to set up missing components${c.reset}\n`);
+  // Summary
+  console.log(`${c.dim}─────────────────────────────────${c.reset}`);
+  console.log(`${c.bold}Summary:${c.reset} ${c.green}${totalInstalled} installed${c.reset}, ${totalMissing > 0 ? c.yellow : c.dim}${totalMissing} missing${c.reset}`);
+
+  if (missingItems.length > 0) {
+    console.log(`\n${c.bold}Quick fixes:${c.reset}`);
+
+    // Group by install hint
+    const hints = new Map<string, string[]>();
+    for (const item of missingItems) {
+      if (item.installHint) {
+        const existing = hints.get(item.installHint) || [];
+        existing.push(item.name);
+        hints.set(item.installHint, existing);
+      }
+    }
+
+    for (const [hint, items] of hints) {
+      if (hint.startsWith('dotfiles')) {
+        console.log(`  ${c.cyan}${hint}${c.reset} ${c.dim}→ ${items.join(', ')}${c.reset}`);
+      } else {
+        console.log(`  ${c.dim}${hint}${c.reset}`);
+      }
+    }
+
+    console.log(`\n${c.yellow}Run 'dotfiles install' to set up all missing components${c.reset}`);
   } else {
-    console.log(`\n${c.green}All configured!${c.reset}\n`);
+    console.log(`\n${c.green}All configured! Your dotfiles are fully set up.${c.reset}`);
   }
+  console.log();
+}
+
+// Keep old function for compatibility
+function printStatus() {
+  printInventory();
 }
 
 // ============================================================================
