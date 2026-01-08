@@ -4,13 +4,13 @@
  * Usage: dotfiles [command]
  */
 
-import { existsSync, readFileSync, writeFileSync, mkdirSync, symlinkSync, unlinkSync, statSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync, symlinkSync, unlinkSync, statSync, lstatSync } from 'fs';
 import { execSync, spawnSync } from 'child_process';
 import { homedir } from 'os';
 import { dirname, join, resolve } from 'path';
 
 const HOME = homedir();
-const DOTFILES_DIR = resolve(dirname(dirname(import.meta.path)));
+const DOTFILES_DIR = resolve(dirname(dirname(dirname(import.meta.path))));
 
 // Colors
 const c = {
@@ -47,7 +47,7 @@ function commandExists(cmd: string): boolean {
 
 function isSymlink(path: string): boolean {
   try {
-    return statSync(path).isSymbolicLink();
+    return lstatSync(path).isSymbolicLink();
   } catch {
     return false;
   }
@@ -98,25 +98,48 @@ function prompt(question: string): boolean {
 }
 
 function safeLink(src: string, dest: string, description: string): boolean {
-  if (existsSync(dest)) {
-    try {
-      const linkTarget = readFileSync(dest, 'utf-8').slice(0, 100);
-      const srcContent = readFileSync(src, 'utf-8').slice(0, 100);
-      if (linkTarget === srcContent || statSync(dest).isSymbolicLink()) {
-        log.ok(`${description} already linked`);
-        return true;
+  // Check if anything exists at dest (including broken symlinks)
+  let destExists = false;
+  try {
+    lstatSync(dest);
+    destExists = true;
+  } catch {}
+
+  if (destExists) {
+    // Check if already a symlink pointing to the correct source
+    if (isSymlink(dest)) {
+      try {
+        const target = readFileSync(dest, 'utf-8'); // This follows symlink
+        const srcContent = readFileSync(src, 'utf-8');
+        if (target === srcContent) {
+          log.ok(`${description} already linked`);
+          return true;
+        }
+      } catch {}
+      // Symlink exists but points elsewhere - remove and relink
+      unlinkSync(dest);
+      log.info(`Updated symlink for ${description}`);
+    } else {
+      // Regular file exists
+      try {
+        const destContent = readFileSync(dest, 'utf-8').slice(0, 100);
+        const srcContent = readFileSync(src, 'utf-8').slice(0, 100);
+        if (destContent === srcContent) {
+          log.ok(`${description} already linked`);
+          return true;
+        }
+      } catch {}
+
+      log.warn(`${description} exists at ${dest}`);
+      if (!prompt(`  Backup and replace?`)) {
+        log.info('Skipped');
+        return false;
       }
-    } catch {}
 
-    log.warn(`${description} exists at ${dest}`);
-    if (!prompt(`  Backup and replace?`)) {
-      log.info('Skipped');
-      return false;
+      const backup = `${dest}.backup.${Date.now()}`;
+      execSync(`mv "${dest}" "${backup}"`);
+      log.info(`Backed up to ${backup}`);
     }
-
-    const backup = `${dest}.backup.${Date.now()}`;
-    execSync(`mv "${dest}" "${backup}"`);
-    log.info(`Backed up to ${backup}`);
   }
 
   mkdirSync(dirname(dest), { recursive: true });
