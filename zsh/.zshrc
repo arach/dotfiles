@@ -115,7 +115,7 @@ source $ZSH/oh-my-zsh.sh
 
 autoload -U add-zsh-hook
 
-. "$HOME/.local/bin/env"
+[[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
 
 # pnpm
 export PNPM_HOME="/Users/arach/Library/pnpm"
@@ -208,7 +208,7 @@ alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 alias yolo="claude --dangerously-skip-permissions"
-alias claude="~/.claude/local/claude"
+alias reload="source ~/.zshrc"
 export EDITOR="cursor"
 
 #Disable real-time history sharing between session
