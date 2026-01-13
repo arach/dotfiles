@@ -5,6 +5,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
@@ -208,6 +211,7 @@ alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 alias yolo="claude --dangerously-skip-permissions"
+alias cr="claude --resume"  # 🔄 resume waiting Claude session
 alias reload="source ~/.zshrc"
 export EDITOR="cursor"
 
@@ -222,3 +226,6 @@ export PATH=/Users/arach/.opencode/bin:$PATH
 
 # Hooked CLI
 export PATH="$HOME/.hooked/bin:$PATH"
+
+# fnm (Fast Node Manager)
+eval "$(fnm env --use-on-cd)"
